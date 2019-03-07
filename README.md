@@ -8,6 +8,8 @@ Todo.
 
 2. Use SFDX to create new LWC; Note files will auto-lint on git commit.
 
+3. Scripts to spin up scratch orgs included; Note project name is needed (see `scripts/create-scratch-org.sh`)
+
 ## Resources
 
 https://github.com/trailheadapps/lwc-recipes
