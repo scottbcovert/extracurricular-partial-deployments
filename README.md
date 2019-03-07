@@ -24,6 +24,18 @@ https://github.com/dreamhouseapp/dreamhouse-lwc
 
 `.circleci` directory houses continuous integration configs
 
+`.editorconfig` contains common editor settings for our projects. Note that VSCode currently requires an extension (see below)
+
+## Recommended Extensions for VSCode
+
+[Salesforce Extension pack bundle, incl LWC, Apex, CLI support](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
+
+[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+[Code-editing for LWC](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode-lwc)
+
+[Editor config](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
 ## Issues
 
 -Should we add automatic `__tests__` folder/file creation when creating new LWC?
