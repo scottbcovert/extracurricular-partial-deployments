@@ -1,0 +1,55 @@
+version: 2
+jobs:
+  validate-prod:
+    docker:
+      - image: tythonco/docker-sfdx-cli:latest
+    steps:
+      - checkout
+      - run:
+          name: Login to Production
+          command: . scripts/setup-prod.sh
+      - run:
+          name: Validate & Run Tests Against Production
+          command: . scripts/validate-prod.sh      
+  deploy-qa:
+    docker:
+      - image: tythonco/docker-sfdx-cli:latest
+    steps:
+      - checkout
+      - run:
+          name: Login to QA
+          command: . scripts/setup-qa.sh
+      - run:
+          name: Deploy to QA
+          command: . scripts/deploy-qa.sh
+  deploy-prod:
+    docker:
+    - image: tythonco/docker-sfdx-cli:latest
+    steps:
+      - checkout
+      - run:
+          name: Login to Production
+          command: . scripts/setup-prod.sh
+      - run:
+          name: Deploy to Production
+          command: . scripts/deploy-prod.sh
+workflows:
+  version: 2
+  ci-cd:
+    jobs:
+      - validate-prod:
+          filters:
+            branches:
+              ignore:
+                - master
+                - dev
+      - deploy-qa:
+          filters:
+            branches:
+              only:
+                - dev
+      - deploy-prod:
+          filters:
+            branches:
+              only:
+                - master

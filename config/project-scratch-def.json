@@ -1,0 +1,10 @@
+{
+    "orgName": "My Org Placeholder",
+    "edition": "Developer",
+    "settings": {
+    	"orgPreferences" : {
+            "S1DesktopEnabled": true,
+            "S1EncryptedStoragePref2": false
+        }
+    }
+}
