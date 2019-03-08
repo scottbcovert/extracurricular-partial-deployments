@@ -2,7 +2,7 @@
 
 ## Dev, Build and Test
 
-Todo.
+Todo WIP.
 
 1. Run `npm install` to bring in all development dependencies.
 
@@ -22,9 +22,13 @@ https://github.com/dreamhouseapp/dreamhouse-lwc
 
 `scripts/` directory contains shell scripts for orchestrating project flows
 
-`.circleci` directory houses continuous integration configs
+`data/` folder contains sample data for hydrating a newly created scratch org
+
+`.circleci` directory houses continuous integration configs; Note that this requires creating a Connected App in the Salesforce org and then hooking into CircleCI [how to](https://docs.google.com/document/d/1deSus_938pt4832rDeND51ppnOgKNZxM-dFIyZJJUsw/edit?usp=sharing)
 
 `.editorconfig` contains common editor settings for our projects. Note that VSCode currently requires an extension (see below)
+
+`.vscode/` contains VSCode-specific editor settings and extension recommendations for sharing amongst team members
 
 ## Recommended Extensions for VSCode
 
@@ -32,12 +36,14 @@ https://github.com/dreamhouseapp/dreamhouse-lwc
 
 [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-[Code-editing for LWC](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode-lwc)
-
 [Editor config](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+
+[Markdown Linter](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint)
 
 ## Issues
 
 -Should we add automatic `__tests__` folder/file creation when creating new LWC?
+
 -Should unit test scripts be run on pre-commit?
+
 -Install stylelint for css, can be added to lint-staged

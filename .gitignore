@@ -32,7 +32,8 @@ ehthumbs.db
 $RECYCLE.BIN/
 
 # VS Code project settings
-.vscode/
+# temp disabled to share recommended extensions, settings
+# .vscode/
 
 #Ignore mm.log File
 mm.log
