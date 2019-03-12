@@ -2,8 +2,8 @@
 
 # IMPORTANT! Replace with the actual project name!
 PROJECT_NAME=MyProject
-# SAMPLE DATA: Define your sample data, uncomment below while updating the data file names!
-# DATA_IMPORT_FILES=data/GoalSheets.json,data/FunnelSettings.json,data/FunnelViews.json,data/Bubbles.json,data/Periods.json,data/Opportunities.json
+# SAMPLE DATA: Define your sample data, uncomment below while updating comma-separated data file names
+# DATA_IMPORT_FILES=data/SomeObjects1.json,data/MySettings.json,data/EtcEtc.json
 DEVHUB_NAME="${PROJECT_NAME}DevHub"
 PERMSET_NAME="${PROJECT_NAME}UserPermissions"
 
@@ -12,9 +12,9 @@ echo "Authorizing you with the ${PROJECT_NAME} Dev Hub org..."
 echo ""
 sfdx force:auth:web:login --setalias ${DEVHUB_NAME} --json
 echo ""
-if [ "$?" = "1" ] 
+if [ "$?" = "1" ]
 then
-	echo "ERROR: Can't authorize you with the ${PROJECT_NAME} Dev Hub org!"	
+	echo "ERROR: Can't authorize you with the ${PROJECT_NAME} Dev Hub org!"
 	exit
 fi
 echo "SUCCESS: You've been authorized with the ${PROJECT_NAME} Dev Hub org!"
@@ -24,7 +24,7 @@ echo "Building your scratch org, please wait..."
 echo ""
 sfdx force:org:create --targetdevhubusername ${DEVHUB_NAME} -f config/project-scratch-def.json --setdefaultusername -a ${PROJECT_NAME} --json
 echo ""
-if [ "$?" = "1" ] 
+if [ "$?" = "1" ]
 then
 	echo "ERROR: Can't create your org!"
 	exit
@@ -37,9 +37,9 @@ echo ""
 sfdx force:source:push --json
 echo ""
 if [ "$?" = "1" ]
-then 
-	echo "ERROR: Pushing source to the scratch org failed!"	
-	exit 
+then
+	echo "ERROR: Pushing source to the scratch org failed!"
+	exit
 fi
 echo "SUCCESS: Source pushed successfully to the scratch org!"
 
@@ -52,7 +52,7 @@ echo ""
 if [ "$?" = "1" ]
 then
 	echo "ERROR: Assigning the project permission set to the default scratch org user failed!"
-	exit 
+	exit
 fi
 echo "SUCCESS: Project permission set was assigned successfully to the default scratch org user!"
 
@@ -65,7 +65,7 @@ echo ""
 if [ "$?" = "1" ]
 then
 	echo "ERROR: Importing default data to the scratch org failed!"
-	exit 
+	exit
 fi
 echo "SUCCESS: Default data was successfully imported to the scratch org!"
 
@@ -78,7 +78,7 @@ echo ""
 if [ "$?" = "1" ]
 then
 	echo "ERROR: Running anonymous Apex scripts against the scratch org failed!"
-	exit 
+	exit
 fi
 echo "SUCCESS: Successfully ran anonymous Apex scripts against the scratch org!"
 
