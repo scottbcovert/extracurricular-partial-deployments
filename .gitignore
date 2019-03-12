@@ -42,9 +42,25 @@ mm.log
 #Ignore Sublime Project Files
 *.sublime*
 
+#Ignore MavensMate Files
+apex-scripts/*
+
+#Ignore IlluminatedCloud Files
+.idea/
+IlluminatedCloud/
+*.iml
+
+#Ignore Eclipse Project Files
+salesforce.schema
+Referenced\ Packages/*
+.project
+.settings/*
+
 #Ignore Build Files
 .tmp
 dist
+*_prod
+deploy_*
 
 #Misc
 .temp
