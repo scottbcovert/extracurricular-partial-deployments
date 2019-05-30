@@ -1,5 +1,5 @@
 {
-    "orgName": "My Org Placeholder",
+    "orgName": "ExtraCurricular",
     "edition": "Developer",
     "settings": {
         "orgPreferenceSettings": {
@@ -7,5 +7,5 @@
             "s1EncryptedStoragePref2": false
         }
     },
-    "adminEmail": "devs@tython.co"
+    "adminEmail": "scott.covert@tython.co"
 }
