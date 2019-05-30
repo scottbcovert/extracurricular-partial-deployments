@@ -54,12 +54,19 @@ fi
 
 cd "$WSPACE"
 #echo Changing directoy to $WSPACE
-rm -rf $BUILDDIR
-#echo Delete pre-existing $BUILDDIR directory
+
+if [ -d "$WSPACE/$BUILDDIR" ]
+then
+    rm -rf $BUILDDIR
+    #echo Delete pre-existing $BUILDDIR directory
+fi
 mkdir $BUILDDIR
 #echo Creating $BUILDDIR directory
-rm -rf $DESTROYDIR
-#echo Delete pre-existing $DESTROYDIR directory
+if [ -d "$WSPACE/$DESTROYDIR" ]
+then
+    rm -rf $DESTROYDIR
+    #echo Delete pre-existing $DESTROYDIR directory
+fi
 cd $ROOTDIR
 #echo Changing directory to $ROOTDIR
 if [ ! -z "$PRIORCOMMIT" ]
@@ -67,40 +74,43 @@ then
         git diff --diff-filter=d -z --name-only $PRIORCOMMIT $CURRCOMMIT -- . ":!$EXCLDIR" -- . ":!*.*ignore" | xargs -0 -IREPLACE rsync -aR REPLACE "$WSPACE/$BUILDDIR/$ROOTDIR"
         #echo Moving changed files to $BUILDDIR folder
         IFS=$'\n';
-        for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*-meta.xml')
-        do
-                BNAME=`basename $f`
-                BNAME="${BNAME//-meta.xml}"
-                DIR=`dirname $f`
-                DIR=${DIR##*$SRCDIR/}
-                if [[ $DIR == "aura/"* ]]
-                then
-                        cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/aura/"
-                elif [[ $DIR == "lwc/"* ]]
-                then
-                        cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/lwc/"
-                else
-                        cp -pv "$WSPACE/$SRCDIR/$DIR/$BNAME" "$WSPACE/$BUILDDIR/$SRCDIR/$DIR/"
-                fi
-        done
-        #echo Moving all related components to changed metadata files and all related aura/lwc files within a changed bundle to $BUILDDIR folder
-        for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*.cls' -or -name '*.component' -or -name '*.page' -or -name '*.resource' -or -name '*.trigger' -or -name '*.app' -not -not -path '$SRCDIR/applications/*' -or -name '*.cmp' -or -name '*.design' -or -name '*.evt' -or -name '*.intf' -or -name '*.js' -or -name '*.svg' -or -name '*.css' -or -name '*.auradoc' -or -name '*.tokens' -or -name '*.html' -or -name '*.js-meta.xml' -or -name '*.js-meta.xml')
-        do
-                BNAME=`basename $f`
-                BNAME="$BNAME-meta.xml"
-                DIR=`dirname $f`
-                DIR=${DIR##*$SRCDIR/}
-                #echo $DIR
-                if [[ $DIR == "aura/"* ]]
-                then
-                        cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/aura/"
-                elif [[ $DIR == "lwc/"* ]]
-                then
-                        cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/lwc/"
-                else
-                        cp -pv "$WSPACE/$SRCDIR/$DIR/$BNAME" "$WSPACE/$BUILDDIR/$SRCDIR/$DIR/"
-                fi
-        done
+        if [ -d "$WSPACE/$BUILDDIR/$SRCDIR" ]
+        then
+            for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*-meta.xml')
+            do
+                    BNAME=`basename $f`
+                    BNAME="${BNAME//-meta.xml}"
+                    DIR=`dirname $f`
+                    DIR=${DIR##*$SRCDIR/}
+                    if [[ $DIR == "aura/"* ]]
+                    then
+                            cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/aura/"
+                    elif [[ $DIR == "lwc/"* ]]
+                    then
+                            cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/lwc/"
+                    else
+                            cp -pv "$WSPACE/$SRCDIR/$DIR/$BNAME" "$WSPACE/$BUILDDIR/$SRCDIR/$DIR/"
+                    fi
+            done
+            #echo Moving all related components to changed metadata files and all related aura/lwc files within a changed bundle to $BUILDDIR folder
+            for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*.cls' -or -name '*.component' -or -name '*.page' -or -name '*.resource' -or -name '*.trigger' -or -name '*.app' -not -not -path '$SRCDIR/applications/*' -or -name '*.cmp' -or -name '*.design' -or -name '*.evt' -or -name '*.intf' -or -name '*.js' -or -name '*.svg' -or -name '*.css' -or -name '*.auradoc' -or -name '*.tokens' -or -name '*.html' -or -name '*.js-meta.xml' -or -name '*.js-meta.xml')
+            do
+                    BNAME=`basename $f`
+                    BNAME="$BNAME-meta.xml"
+                    DIR=`dirname $f`
+                    DIR=${DIR##*$SRCDIR/}
+                    #echo $DIR
+                    if [[ $DIR == "aura/"* ]]
+                    then
+                            cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/aura/"
+                    elif [[ $DIR == "lwc/"* ]]
+                    then
+                            cp -Rpv "$WSPACE/$SRCDIR/$DIR" "$WSPACE/$BUILDDIR/$SRCDIR/lwc/"
+                    else
+                            cp -pv "$WSPACE/$SRCDIR/$DIR/$BNAME" "$WSPACE/$BUILDDIR/$SRCDIR/$DIR/"
+                    fi
+            done
+        fi
         #echo Moving all metadata files related to deleted components and all related aura/lwc files within a changed bundle to $BUILDDIR folder
         if [ `git diff --diff-filter=D -z --name-only $PRIORCOMMIT $CURRCOMMIT` ]
         then
@@ -222,7 +232,7 @@ EOF
         #echo ====FINAL PACKAGE.XML=====
         cat "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
         fi
-        if [ -d "$WSPACE/$DESTROYDIR" ]
+        if [[ -d "$WSPACE/$DESTROYDIR" ]]
         then
                 read -d '' NEWDESTROYXML <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -293,11 +303,11 @@ EOF
                                         xmlstarlet ed -L -s "/Package/types[name='$TYPENAME']" -t elem -n members -v "$ENTITY" "$WSPACE/$BUILDDIR/$SRCDIR/destructiveChangesPost.xml"
                                         destroyElementArray+=($TYPENAME$ENTITY)
                                 fi
-                        else
-                                echo ERROR: UNKNOWN FILE TYPE $CFILE
+                        #else
+                                #echo ERROR: UNKNOWN FILE TYPE $CFILE
                         fi
                         #echo ====UPDATED destructiveChangesPost.xml====
-                        cat "$WSPACE/$BUILDDIR/$SRCDIR/destructiveChangesPost.xml"
+                        #cat "$WSPACE/$BUILDDIR/$SRCDIR/destructiveChangesPost.xml"
                 done
                 #echo Cleaning up destructiveChangesPost.xml
                 xmlstarlet ed -L -s /Package -t elem -n version -v "45.0" "$WSPACE/$BUILDDIR/$SRCDIR/destructiveChangesPost.xml"
@@ -305,6 +315,8 @@ EOF
 
                 #echo ====FINAL destructiveChangesPost.xml=====
                 cat "$WSPACE/$BUILDDIR/$SRCDIR/destructiveChangesPost.xml"
+        else
+            RUNDELETE=0
         fi
 else
         #echo No prior commit found, default Package.xml will be used
@@ -313,3 +325,41 @@ else
 fi
 #echo Return to workspace directory
 cd "$WSPACE"
+if [[ $PROJECTTYPE == "mdapi" ]]
+then
+    #Deploy to prod & run all tests
+    echo "Deploying to production & running all tests..."
+    sfdx force:mdapi:deploy -c -d $BUILDDIR -u ExtraCurricularDevHub -l RunLocalTests -w -1
+else
+    #Convert to MDAPI format for deployment to prod
+    echo "Converting to MDAPI format..."
+    if [[ $RUNDELETE == 0 ]]
+    then
+        mkdir $DESTROYDIR
+    fi
+    if [ -d "$WSPACE/$BUILDDIR/force-app/" ]
+    then
+        sfdx force:source:convert -d deploy_prod -r $BUILDDIR/force-app/
+    fi
+    if [[ $RUNDELETE == 0 ]]
+    then
+        rm -rf $DESTROYDIR
+    fi
+    if [ -d "$WSPACE/$DESTROYDIR/force-app/" ]
+    then
+        sfdx force:source:convert -d delete_prod -r $DESTROYDIR/force-app/
+    fi
+    #Deploy to prod & run all tests
+    echo "Deploying to production & running all tests..."
+    if [ -d "$WSPACE/deploy_prod" ]
+    then
+        sfdx force:mdapi:deploy -c -d deploy_prod -u ExtraCurricularDevHub -l RunLocalTests -w -1
+        rm -rf deploy_prod
+    fi
+    if [ -d "$WSPACE/delete_prod" ]
+    then
+        sfdx force:mdapi:deploy -c -d delete_prod -u ExtraCurricularDevHub -l RunLocalTests -w -1
+        rm -rf delete_prod
+    fi
+
+fi
