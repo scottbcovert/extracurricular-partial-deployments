@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # IMPORTANT! Replace with the actual project name!
-PROJECT_NAME=MyProject
+PROJECT_NAME=ExtraCurricular
 # SAMPLE DATA: Define your sample data, uncomment below while updating comma-separated data file names
 # DATA_IMPORT_FILES=data/SomeObjects1.json,data/MySettings.json,data/EtcEtc.json
 DEVHUB_NAME="${PROJECT_NAME}DevHub"
