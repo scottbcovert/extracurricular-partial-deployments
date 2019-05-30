@@ -208,8 +208,6 @@ EOF
                                         #echo Generating new member for $ENTITY
                                         xmlstarlet ed -L -s "/Package/types[name='$TYPENAME']" -t elem -n members -v "$ENTITY" "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
                                         elementArray+=($TYPENAME$ENTITY)
-                                else
-                                        echo Skipping to avoid duplicate entry in package.xml
                                 fi
                         else
                                 #echo Generating new $TYPENAME type
@@ -230,7 +228,7 @@ EOF
         xmlstarlet ed -L -i /Package -t attr -n xmlns -v "http://soap.sforce.com/2006/04/metadata" "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
 
         #echo ====FINAL PACKAGE.XML=====
-        cat "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
+        #cat "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
         fi
         if [[ -d "$WSPACE/$DESTROYDIR" ]]
         then
@@ -292,8 +290,6 @@ EOF
                                                 #echo Generating new member for $ENTITY
                                                 xmlstarlet ed -L -s "/Package/types[name='$TYPENAME']" -t elem -n members -v "$ENTITY" "$WSPACE/$DESTROYDIR/destructiveChangesPost.xml"
                                                 destroyElementArray+=($TYPENAME$ENTITY)
-                                        else
-                                                echo Skipping to avoid duplicate entry in destructiveChangesPost.xml
                                         fi
                                 else
                                         #echo Generating new $TYPENAME type
@@ -314,7 +310,7 @@ EOF
                 xmlstarlet ed -L -i /Package -t attr -n xmlns -v "http://soap.sforce.com/2006/04/metadata" "$WSPACE/$DESTROYDIR/destructiveChangesPost.xml"
 
                 #echo ====FINAL destructiveChangesPost.xml=====
-                cat "$WSPACE/$DESTROYDIR/destructiveChangesPost.xml"
+                #cat "$WSPACE/$DESTROYDIR/destructiveChangesPost.xml"
         else
             RUNDELETE=0
         fi
