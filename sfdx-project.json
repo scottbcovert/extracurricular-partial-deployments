@@ -5,10 +5,10 @@
       "default": true
     },
     {
-      "path": "staging/force-app"
+      "path": "staging/"
     },
     {
-      "path": "toDelete/force-app"
+      "path": "toDelete/"
     }
   ],
   "namespace": "",
