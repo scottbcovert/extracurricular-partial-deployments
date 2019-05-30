@@ -6,6 +6,7 @@
 # -d sets temporary destination dir for deletions in build
 # -p sets prior commit for build (foundation of git diff command)
 # -c sets current commit for build
+# -t sets project type (sfdx or mdapi) for build
 
 #default arg values
 WSPACE="`pwd`"
@@ -16,8 +17,9 @@ BUILDDIR=staging
 DESTROYDIR=toDelete
 PRIORCOMMIT=HEAD~1
 CURRCOMMIT=HEAD
+PROJECTTYPE=sfdx
 #read command line args
-while getopts w:r:s:e:b:d:p:c: option
+while getopts w:r:s:e:b:d:p:c:t: option
 do
         case "${option}"
         in
@@ -29,8 +31,11 @@ do
                 d) DESTROYIR=${OPTARG};;
                 p) PRIORCOMMIT=${OPTARG};;
                 c) CURRCOMMIT=${OPTARG};;
+                t) PROJECTTYPE=${OPTARG};;
         esac
 done
+
+
 
 echo Workspace: $WSPACE
 echo Git Root Directory: $ROOTDIR
@@ -40,6 +45,12 @@ echo Build Directory: $BUILDDIR
 echo Temporary Destroy Directory: $DESTROYDIR
 echo Prior Commit: $PRIORCOMMIT
 echo Current Commit: $CURRCOMMIT
+echo Project Type: $PROJECTTYPE
+
+if [[ $PROJECTTYPE == "mdapi" ]]
+then
+    SRCDIR=src
+fi
 
 cd "$WSPACE"
 echo Changing directoy to $WSPACE
@@ -73,7 +84,7 @@ then
                 fi
         done
         echo Moving all related components to changed metadata files and all related aura/lwc files within a changed bundle to $BUILDDIR folder
-        for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*.cls' -or -name '*.component' -or -name '*.page' -or -name '*.resource' -or -name '*.trigger' -or -name '*.app' -not -path '$SRCDIR/applications/*' -or -name '*.cmp' -or -name '*.design' -or -name '*.evt' -or -name '*.intf' -or -name '*.js' -or -name '*.svg' -or -name '*.css' -or -name '*.auradoc' -or -name '*.tokens' -or -name '*.html' -or -name '*.js-meta.xml' -or -name '*.js-meta.xml')
+        for f in $(find "$WSPACE/$BUILDDIR/$SRCDIR" -name '*.cls' -or -name '*.component' -or -name '*.page' -or -name '*.resource' -or -name '*.trigger' -or -name '*.app' -not -not -path '$SRCDIR/applications/*' -or -name '*.cmp' -or -name '*.design' -or -name '*.evt' -or -name '*.intf' -or -name '*.js' -or -name '*.svg' -or -name '*.css' -or -name '*.auradoc' -or -name '*.tokens' -or -name '*.html' -or -name '*.js-meta.xml' -or -name '*.js-meta.xml')
         do
                 BNAME=`basename $f`
                 BNAME="$BNAME-meta.xml"
@@ -124,7 +135,9 @@ then
         else
                 echo "No metadata deleted"
         fi
-        read -d '' NEWPKGXML <<EOF
+        if [[ $PROJECTTYPE == "mdapi" ]]
+        then
+            read -d '' NEWPKGXML <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
 </Package>
@@ -208,6 +221,7 @@ EOF
 
         echo ====FINAL PACKAGE.XML=====
         cat "$WSPACE/$BUILDDIR/$SRCDIR/package.xml"
+        fi
         if [ -d "$WSPACE/$DESTROYDIR" ]
         then
                 read -d '' NEWDESTROYXML <<EOF
