@@ -3,6 +3,12 @@
     {
       "path": "force-app",
       "default": true
+    },
+    {
+      "path": "staging/force-app"
+    },
+    {
+      "path": "toDelete/force-app"
     }
   ],
   "namespace": "",
